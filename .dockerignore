@@ -1,0 +1,10 @@
+**/node_modules
+**/.next
+**/.turbo
+**/.medusa
+**/dist
+.git
+.github
+**/*.log
+ecosystem.config.js
+/.env

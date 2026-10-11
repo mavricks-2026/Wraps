@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "noEmit": true,
+    "allowJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@goodsly/types": ["packages/types/src/index.ts"],
+      "@goodsly/types/*": ["packages/types/src/*"],
+      "@goodsly/utils": ["packages/utils/src/index.ts"],
+      "@goodsly/utils/*": ["packages/utils/src/*"],
+      "@goodsly/ui": ["packages/ui/src/index.ts"],
+      "@goodsly/ui/*": ["packages/ui/src/*"]
+    }
+  },
+  "exclude": ["node_modules", ".next", "dist", "build", ".turbo"]
+}

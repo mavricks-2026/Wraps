@@ -1,0 +1,112 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: goodsly-redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: goodsly-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: medusa
+      POSTGRES_PASSWORD: ${MEDUSA_DB_PASSWORD}
+      POSTGRES_DB: medusa
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - medusa_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medusa -d medusa"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    image: goodsly-app
+    container_name: goodsly-backend
+    restart: unless-stopped
+    working_dir: /app/apps/backend/dist
+    command: sh -c "pnpm exec medusa start"
+    env_file:
+      - ./apps/backend/.env
+    environment:
+      NODE_ENV: production
+      # Override the .env (host) values with in-network service names.
+      DATABASE_URL: postgresql://medusa:${MEDUSA_DB_PASSWORD}@postgres:5432/medusa
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.goodsly-api.rule=Host(`api.goodsly.store`)
+      - traefik.http.routers.goodsly-api.entrypoints=web,websecure
+      - traefik.http.routers.goodsly-api.tls=true
+      - traefik.http.routers.goodsly-api.tls.certresolver=mytlschallenge
+      - traefik.http.services.goodsly-api.loadbalancer.server.port=9000
+      - traefik.docker.network=n8n_default
+    networks:
+      - default
+      - n8n
+
+  storefront:
+    image: goodsly-app
+    container_name: goodsly-storefront
+    restart: unless-stopped
+    working_dir: /app/apps/storefront
+    command: sh -c "pnpm exec next start -p 3100 -H 0.0.0.0"
+    environment:
+      NODE_ENV: production
+      # Server-side only (NOT inlined into the client bundle). Needed for
+      # order creation (bypasses RLS) and Razorpay payment verification.
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET}
+      # Optional: set to enable order-confirmation emails (no-op until set).
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.goodsly-web.rule=Host(`goodsly.store`) || Host(`www.goodsly.store`)
+      - traefik.http.routers.goodsly-web.entrypoints=web,websecure
+      - traefik.http.routers.goodsly-web.tls=true
+      - traefik.http.routers.goodsly-web.tls.certresolver=mytlschallenge
+      - traefik.http.services.goodsly-web.loadbalancer.server.port=3100
+      - traefik.docker.network=n8n_default
+    networks:
+      - default
+      - n8n
+
+  admin:
+    image: goodsly-app
+    container_name: goodsly-admin
+    restart: unless-stopped
+    working_dir: /app/apps/admin
+    command: sh -c "pnpm exec next start -p 3101 -H 0.0.0.0"
+    environment:
+      NODE_ENV: production
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.goodsly-admin.rule=Host(`admin.goodsly.store`)
+      - traefik.http.routers.goodsly-admin.entrypoints=web,websecure
+      - traefik.http.routers.goodsly-admin.tls=true
+      - traefik.http.routers.goodsly-admin.tls.certresolver=mytlschallenge
+      - traefik.http.services.goodsly-admin.loadbalancer.server.port=3101
+      - traefik.docker.network=n8n_default
+    networks:
+      - default
+      - n8n
+
+volumes:
+  redis_data:
+  medusa_pgdata:
+
+networks:
+  n8n:
+    external: true
+    name: n8n_default

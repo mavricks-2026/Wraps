@@ -1,0 +1,26 @@
+{
+  "name": "goodsly",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:storefront": "turbo run dev --filter=@goodsly/storefront",
+    "dev:admin": "turbo run dev --filter=@goodsly/admin",
+    "dev:backend": "turbo run dev --filter=@goodsly/backend",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean && rimraf node_modules .turbo"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.7",
+    "turbo": "^2.0.6",
+    "typescript": "^5.4.5",
+    "prettier": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.7.0"
+}
