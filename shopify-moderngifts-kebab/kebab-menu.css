@@ -1,0 +1,141 @@
+/* ============================================================
+   Kebab mobile menu for Dawn (moderngifts.in)
+   All rules scoped under .mg-kebab — no Dawn class conflicts.
+   Mobile only: shown under 750px (Dawn's mobile breakpoint).
+   ============================================================ */
+
+.mg-kebab {
+  position: relative;
+  display: none;
+}
+
+@media screen and (max-width: 749.98px) {
+  .mg-kebab {
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* ---- Toggle button ---- */
+
+.mg-kebab__toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  color: rgb(var(--color-foreground, 18, 18, 18));
+  cursor: pointer;
+  /* 44 x 44 minimum tap target, icon centered inside */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
+.mg-kebab__toggle:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.mg-kebab__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.mg-kebab__icon svg {
+  display: block;
+}
+
+/* dots visible while closed; X visible while open */
+.mg-kebab__icon--close { display: none; }
+.mg-kebab.is-open .mg-kebab__icon--dots { display: none; }
+.mg-kebab.is-open .mg-kebab__icon--close { display: inline-flex; }
+
+/* ---- Overlay ---- */
+
+.mg-kebab__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 18, 18, 0.35);
+  z-index: 90; /* above bottom nav + WhatsApp (which usually sit ~80-85) */
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.mg-kebab.is-open .mg-kebab__overlay {
+  opacity: 1;
+}
+
+/* ---- Dropdown panel ---- */
+
+.mg-kebab__panel {
+  position: absolute;
+  top: 100%;            /* anchored directly under the toggle button */
+  left: 0;
+  width: 100vw;         /* full width on mobile */
+  max-width: 100vw;
+  background: rgb(var(--color-background, 255, 255, 255));
+  color: rgb(var(--color-foreground, 18, 18, 18));
+  box-shadow: 0 8px 24px rgba(18, 18, 18, 0.12);
+  z-index: 95;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.mg-kebab.is-open .mg-kebab__panel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* when open, keep header + panel above everything else */
+.mg-kebab.is-open {
+  z-index: 96;
+}
+
+/* ---- List & links ---- */
+
+.mg-kebab__list {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0;
+}
+
+.mg-kebab__link {
+  display: block;
+  padding: 16px 20px;
+  font-family: var(--font-body-family, serif); /* site serif */
+  font-size: 18px;
+  line-height: 1.3;
+  color: inherit;
+  text-decoration: none;
+}
+
+.mg-kebab__link:hover,
+.mg-kebab__link:focus-visible {
+  background: rgba(18, 18, 18, 0.05);
+}
+
+.mg-kebab__link--current {
+  background: rgba(18, 18, 18, 0.08); /* light gray highlight for active page */
+  font-weight: 600;
+}
+
+/* ---- Hide floating widgets while menu is open ---- */
+body.mg-kebab-open .whatsapp-button,
+body.mg-kebab-open .whatsapp-float,
+body.mg-kebab-open [class*="whatsapp"],
+body.mg-kebab-open .sticky-nav,
+body.mg-kebab-open .bottom-nav,
+body.mg-kebab-open .mobile-bottom-nav {
+  display: none !important;
+}
