@@ -1,0 +1,24 @@
+{
+  "name": "@goodsly/utils",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.4.0"
+  },
+  "devDependencies": {
+    "@goodsly/types": "workspace:*",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.4.5"
+  }
+}
