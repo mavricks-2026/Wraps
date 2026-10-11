@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@goodsly/types": ["../../packages/types/src/index.ts"],
+      "@goodsly/types/*": ["../../packages/types/src/*"],
+      "@goodsly/utils": ["../../packages/utils/src/index.ts"],
+      "@goodsly/utils/*": ["../../packages/utils/src/*"],
+      "@goodsly/ui": ["../../packages/ui/src/index.ts"],
+      "@goodsly/ui/*": ["../../packages/ui/src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
