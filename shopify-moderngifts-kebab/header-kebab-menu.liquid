@@ -1,0 +1,57 @@
+{%- comment -%}
+  Kebab (vertical three-dot) mobile menu for Dawn.
+  Render this inside sections/header.liquid where the hamburger button lives.
+  Menu items come from the theme's main-menu linklist (editable in Admin > Navigation).
+{%- endcomment -%}
+
+<div class="mg-kebab" data-mg-kebab>
+  <button
+    type="button"
+    class="mg-kebab__toggle"
+    aria-label="Menu"
+    aria-expanded="false"
+    aria-controls="mg-kebab-panel"
+    data-mg-kebab-toggle
+  >
+    <span class="mg-kebab__icon mg-kebab__icon--dots" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="5" r="2" fill="currentColor"/>
+        <circle cx="12" cy="12" r="2" fill="currentColor"/>
+        <circle cx="12" cy="19" r="2" fill="currentColor"/>
+      </svg>
+    </span>
+    <span class="mg-kebab__icon mg-kebab__icon--close" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </span>
+  </button>
+
+  <div class="mg-kebab__overlay" data-mg-kebab-overlay hidden></div>
+
+  <nav
+    id="mg-kebab-panel"
+    class="mg-kebab__panel"
+    data-mg-kebab-panel
+    hidden
+    aria-label="Mobile menu"
+  >
+    <ul class="mg-kebab__list" role="list">
+      {%- for link in linklists['main-menu'].links -%}
+        {%- assign is_current = false -%}
+        {%- if link.active or link.child_active or link.current -%}
+          {%- assign is_current = true -%}
+        {%- endif -%}
+        <li class="mg-kebab__item">
+          <a
+            href="{{ link.url }}"
+            class="mg-kebab__link{% if is_current %} mg-kebab__link--current{% endif %}"
+            {% if is_current %}aria-current="page"{% endif %}
+          >
+            {{- link.title | escape -}}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </nav>
+</div>
