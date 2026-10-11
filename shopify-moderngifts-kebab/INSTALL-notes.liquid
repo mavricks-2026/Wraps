@@ -1,0 +1,69 @@
+{%- comment -%}
+  INSTALLATION EDIT for sections/header.liquid (Dawn)
+
+  1. SAVE the file snippets/header-kebab-menu.liquid into your theme
+     (Online Store > Themes > Edit code > Add a new snippet).
+
+  2. IN sections/header.liquid, FIND the existing hamburger button.
+     It looks like this (Dawn 15.x):
+
+       <details id="Details-menu-drawer-container" class="menu-drawer-container">
+         <summary class="header__icon header__icon--menu header__icon--summary link focus-inset" ...>
+           <span>
+             {%- render 'icon-hamburger' -%}
+             {%- render 'icon-close' -%}
+           </span>
+         </summary>
+       ...
+
+  3. REPLACE the <span>…icon-hamburger…icon-close…</span> inside that
+     <summary> with the kebab snippet render, OR (cleaner) replace the
+     whole <summary> block with:
+
+       {% render 'header-kebab-menu' %}
+
+     and remove the now-unused <details>/<summary> drawer trigger.
+
+  4. HIDE the original drawer panel on mobile by adding this rule to
+     kebab-menu.css (already included at the bottom of that file if you
+     prefer, otherwise paste here):
+
+       @media screen and (max-width: 749.98px) {
+         .header__icon--menu,
+         .header__icon--menu + .header__drawer,
+         #menu-drawer,
+         .menu-drawer,
+         .header__drawer {
+           display: none !important;
+         }
+       }
+
+     (Only needed if you keep the old <details> markup around; if you
+      fully replace the <summary> with {% render 'header-kebab-menu' %},
+      none of this hiding is necessary.)
+
+  5. MAKE SURE the parent wrapper of the kebab toggle has
+     position: relative and sits inside the left-side header icon
+     group so it lines up exactly where the hamburger used to sit.
+
+  6. LOAD the CSS — add this to layout/theme.liquid right before the
+     </head> (or append to assets/base.css, but a separate file is
+     cleaner to remove later):
+
+       <link rel="stylesheet" href="{{ 'kebab-menu.css' | asset_url }}">
+
+     Then upload kebab-menu.css as a new asset.
+
+  7. LOAD the JS — add this right before </body> in layout/theme.liquid:
+
+       <script src="{{ 'kebab-menu.js' | asset_url }}" defer></script>
+
+     Then upload kebab-menu.js as a new asset. Deferred so it runs
+     after Dawn's own JS; no conflict since everything is scoped to
+     [data-mg-kebab].
+
+  8. DONE. Menu items (All products, Love, Birthday Gifts, Occasions,
+     Relationship, Corporate, Greetings, My Orders) are read live from
+     Admin > Navigation > main-menu. Edit them there — no code change
+     needed. The active page is auto-highlighted via link.active.
+{%- endcomment -%}
