@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-feature-settings: 'rlig' 1, 'calt' 1;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+}
+
+/* Nicer line-breaking on multi-line headings */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+/* Pink selection highlight */
+::selection {
+  background: #fde0f5;
+  color: #2b1a29;
+}
+
+/* Consistent focus ring */
+:focus-visible {
+  outline: 2px solid #b96cb4;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+summary:focus-visible {
+  outline-offset: -2px;
+}
+
+/* Hide scrollbars on horizontal scroll containers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@layer components {
+  .arch-mask {
+    border-radius: 140px 140px 16px 16px;
+  }
+  .arch-full {
+    border-radius: 999px 999px 24px 24px;
+  }
+  .msym {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+  }
+  .msym-filled {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
